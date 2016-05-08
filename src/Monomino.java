@@ -35,5 +35,10 @@ public class Monomino extends MonominoNoLabel {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return getCoordinates() + " " +getLabel();
+    }
 }
 
