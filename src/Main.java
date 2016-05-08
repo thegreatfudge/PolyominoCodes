@@ -15,6 +15,7 @@ public class Main {
         listOfMonominos.add(new Monomino(new Point(0,0),"a",true,false));
         listOfMonominos.add(new Monomino(new Point(1,0),"a",false,false));
         listOfMonominos.add(new Monomino(new Point(0,1),"",false,true));
+        listOfMonominos.add(new Monomino(new Point(-10,0),"a",false,false));
         polyomino1 = new Polyomino(listOfMonominos);
 
         Set<Monomino> listOfMonominos2 = new HashSet<>();
@@ -22,6 +23,7 @@ public class Main {
         listOfMonominos2.add(new Monomino(new Point(1,0),"a",false,false));
         listOfMonominos2.add(new Monomino(new Point(-1,0),"a",false,false));
         listOfMonominos2.add(new Monomino(new Point(-2,0),"a",false,false));
+        listOfMonominos2.add(new Monomino(new Point(-10,0),"b",false,false));
         listOfMonominos2.add(new Monomino(new Point(2,0),"",false,true));
         polyomino2 = new Polyomino(listOfMonominos2);
 
@@ -51,7 +53,6 @@ public class Main {
 //        System.out.println("NV: " + tmp.get(0).getEndOfPolyomino().getCoordinates().toString());
 //        System.out.println("SV: " + tmp.get(1).getEndOfPolyomino().getCoordinates().toString());
         PolyominoCode.checkIfSetIsCode(test);
-        System.out.println(PolyominoCode.rescaleVector(new Point(-1,0),test,"North"));
-
+        System.out.println(PolyominoCode.checkIfLabelEqualInCEMinus(polyomino1,polyomino2));
     }
 }
