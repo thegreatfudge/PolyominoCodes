@@ -76,7 +76,4 @@ public class Generator {
         return monominos;
     }
 
-    public void setMonominos(List<Monomino> monominos) {
-        this.monominos = monominos;
-    }
 }
