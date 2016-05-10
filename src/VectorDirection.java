@@ -8,7 +8,7 @@ public enum VectorDirection {
 
     private String name;
 
-    private VectorDirection(String name) {
+    VectorDirection(String name) {
         this.name = name;
     }
 

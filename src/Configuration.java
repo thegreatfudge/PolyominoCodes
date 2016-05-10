@@ -2,6 +2,11 @@ public class Configuration {
     private Polyomino first;
     private Polyomino second;
 
+    public Configuration(Polyomino first, Polyomino second) {
+        this.first = first;
+        this.second = second;
+    }
+
     public Polyomino getFirst() {
         return first;
     }
@@ -15,11 +20,6 @@ public class Configuration {
     }
 
     public void setSecond(Polyomino second) {
-        this.second = second;
-    }
-
-    public Configuration(Polyomino first, Polyomino second) {
-        this.first = first;
         this.second = second;
     }
 }

@@ -53,6 +53,6 @@ public class Main {
 //        System.out.println("NV: " + tmp.get(0).getEndOfPolyomino().getCoordinates().toString());
 //        System.out.println("SV: " + tmp.get(1).getEndOfPolyomino().getCoordinates().toString());
         PolyominoCode.checkIfSetIsCode(test);
-        System.out.println(PolyominoCode.checkIfLabelEqualInCEMinus(polyomino1,polyomino2));
+        //System.out.println(PolyominoCode.checkIfLabelEqualInCEMinus(polyomino1,polyomino2));
     }
 }

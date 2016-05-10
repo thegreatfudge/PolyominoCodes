@@ -5,6 +5,25 @@ public class Polyomino {
     private Monomino endOfPolyomino;
     private Monomino beginningOfPolyomino;
 
+    public Set<Monomino> getMonominos() {
+        return monominos;
+    }
+
+    public void setMonominos(Set<Monomino> monominos) {
+        this.monominos = monominos;
+    }
+
+    public Polyomino(Set<Monomino> monominos) {
+        this.monominos = monominos;
+
+        for(Monomino mono : monominos){
+            if(mono.isEnd())
+                this.endOfPolyomino = mono;
+            else if(mono.isBeginning())
+                this.beginningOfPolyomino = mono;
+        }
+    }
+
     public Monomino getEndOfPolyomino() {
         return endOfPolyomino;
     }
@@ -19,25 +38,5 @@ public class Polyomino {
 
     public void setBeginningOfPolyomino(Monomino beginningOfPolyomino) {
         this.beginningOfPolyomino = beginningOfPolyomino;
-    }
-
-    public Set<Monomino> getMonominos() {
-        return monominos;
-    }
-
-    public void setMonominos(Set<Monomino> monominos) {
-        this.monominos = monominos;
-    }
-
-
-    public Polyomino(Set<Monomino> monominos) {
-        this.monominos = monominos;
-
-        for(Monomino mono : monominos){
-            if(mono.isEnd())
-                this.endOfPolyomino = mono;
-            else if(mono.isBeginning())
-                this.beginningOfPolyomino = mono;
-        }
     }
 }
