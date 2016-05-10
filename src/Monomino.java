@@ -1,6 +1,33 @@
-public class Monomino extends MonominoNoLabel {
+public class Monomino {
 
+    private Point coordinates;
+    private boolean isBeginning;
+    private boolean isEnd;
     private String label;
+
+    public Monomino(Point coordinates, String label, boolean isBeginning, boolean isEnd) {
+        this.coordinates = coordinates;
+        this.isBeginning = isBeginning;
+        this.isEnd = isEnd;
+        this.label = label;
+    }
+
+    //TODO BOOLEAN SHIT TO HASHCODE FUNCTION
+    @Override
+    public int hashCode() {
+        return (((coordinates.getCoordinateX() * 11) ^ (coordinates.getCoordinateY() * 7)));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null)
+            return false;
+        else if(obj instanceof Monomino){
+            Monomino tmp = (Monomino) obj;
+            return (coordinates.equals(tmp.getCoordinates()) && isEnd == tmp.isEnd() && label.equals(tmp.label));
+        }
+        return false;
+    }
 
     public String getLabel() {
         return label;
@@ -10,35 +37,27 @@ public class Monomino extends MonominoNoLabel {
         this.label = label;
     }
 
-    public Monomino(Point coordinates, String label, boolean isBeginning, boolean isEnd) {
-        super(coordinates, isBeginning, isEnd);
-        this.label = label;
+    public Point getCoordinates() {
+        return coordinates;
     }
 
-    public Monomino() {
-        this (new Point(0,0),"",false,false);
+    public void setCoordinates(Point coordinates) {
+        this.coordinates = coordinates;
     }
 
-    //TODO BOOLEAN SHIT TO HASHCODE FUNCTION
-    @Override
-    public int hashCode() {
-        return super.hashCode() ^ this.label.hashCode();
+    public boolean isBeginning() {
+        return isBeginning;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == null)
-            return false;
-        else if(obj instanceof Monomino){
-            Monomino tmp = (Monomino) obj;
-            return (this.getCoordinates().equals(tmp.getCoordinates()) && this.label.equals(tmp.getLabel()));
-        }
-        return false;
+    public void setBeginning(boolean beginning) {
+        isBeginning = beginning;
     }
 
-    @Override
-    public String toString() {
-        return getCoordinates() + " " +getLabel();
+    public boolean isEnd() {
+        return isEnd;
+    }
+
+    public void setEnd(boolean end) {
+        isEnd = end;
     }
 }
-
