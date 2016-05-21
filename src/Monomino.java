@@ -29,6 +29,11 @@ public class Monomino {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return coordinates + ", " + label;
+    }
+
     public String getLabel() {
         return label;
     }
