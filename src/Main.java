@@ -66,7 +66,7 @@ public class Main {
 //        System.out.println("NV: " + tmp.get(0).getEndOfPolyomino().getCoordinates().toString());
 //        System.out.println("SV: " + tmp.get(1).getEndOfPolyomino().getCoordinates().toString());
         //PolyominoCode.checkIfSetIsCode(test);
-        System.out.println(PolyominoCode.checkIfLabelEqualInCEMinus(polyomino1,polyomino2));
+        System.out.println(PolyominoCode.checkIfEndsOutsideCWEPlus(polyomino3,polyomino4));
         //System.out.println(PolyominoCode.checkIfHalfPlaneContainsAllMonominos(new Point(-3,0), Arrays.asList(polyomino5), VectorDirection.SOUTH));
     }
 }

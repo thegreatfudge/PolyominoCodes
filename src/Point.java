@@ -7,6 +7,10 @@ public class Point {
         this.coordinateY = coordinateY;
     }
 
+    public void translate(int scale){
+        coordinateX *= scale;
+        coordinateY *= scale;
+    }
     @Override
     public boolean equals(Object obj) {
         if(obj == null)
