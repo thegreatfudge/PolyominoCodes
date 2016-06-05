@@ -7,6 +7,10 @@ public class Point {
         this.coordinateY = coordinateY;
     }
 
+    public Point copy() {
+        return new Point(coordinateX, coordinateY);
+    }
+
     public void translate(int scale){
         coordinateX *= scale;
         coordinateY *= scale;

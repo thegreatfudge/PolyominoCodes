@@ -1,3 +1,6 @@
+import sun.util.resources.cldr.fr.CalendarData_fr_MQ;
+
+import java.util.HashSet;
 import java.util.Set;
 
 public class Polyomino {
@@ -18,6 +21,40 @@ public class Polyomino {
             else if (mono.isBeginning())
                 this.beginningOfPolyomino = mono;
         }
+    }
+
+    public Polyomino copy(){
+        Set<Monomino> monominostmp = new HashSet<>();
+        for(Monomino monomino: monominos){
+            monominostmp.add(monomino.copy());
+        }
+        return new Polyomino(monominostmp);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj instanceof Polyomino) {
+            Polyomino tmp = (Polyomino) obj;
+
+            return (monominos.size() == tmp.monominos.size() && monominos.containsAll(tmp.monominos));
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+
+        for (Monomino monomino : monominos) {
+            hash ^= (monomino.hashCode() * 19);
+        }
+
+        return hash;
     }
 
     public Monomino getEndOfPolyomino() {

@@ -12,6 +12,10 @@ public class Monomino {
         this.label = label;
     }
 
+    public Monomino copy() {
+        return new Monomino(coordinates.copy(), label, isBeginning, isEnd);
+    }
+
     //TODO BOOLEAN SHIT TO HASHCODE FUNCTION
     @Override
     public int hashCode() {
