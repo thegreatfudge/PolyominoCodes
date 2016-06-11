@@ -19,7 +19,7 @@ public class Monomino {
     //TODO BOOLEAN SHIT TO HASHCODE FUNCTION
     @Override
     public int hashCode() {
-        return (((coordinates.getCoordinateX() * 11) ^ (coordinates.getCoordinateY() * 7)));
+        return ((((int)coordinates.getCoordinateX() * 11) ^ ((int)coordinates.getCoordinateY() * 7)));
     }
 
     @Override
@@ -28,7 +28,7 @@ public class Monomino {
             return false;
         else if(obj instanceof Monomino){
             Monomino tmp = (Monomino) obj;
-            return (coordinates.equals(tmp.getCoordinates()) && isEnd == tmp.isEnd() && label.equals(tmp.label));
+            return (coordinates.equals(tmp.getCoordinates()) && isEnd == tmp.isEnd());
         }
         return false;
     }

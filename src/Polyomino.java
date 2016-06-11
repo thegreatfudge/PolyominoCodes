@@ -80,4 +80,13 @@ public class Polyomino {
     public void setMonominos(Set<Monomino> monominos) {
         this.monominos = monominos;
     }
+
+    @Override
+    public String toString() {
+        return "Polyomino{" +
+                "monominos=" + monominos +
+                ", endOfPolyomino=" + endOfPolyomino +
+                ", beginningOfPolyomino=" + beginningOfPolyomino +
+                '}';
+    }
 }

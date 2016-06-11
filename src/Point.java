@@ -27,6 +27,11 @@ public class Point {
     }
 
     @Override
+    public int hashCode() {
+        return ((coordinateX * 839) ^ (coordinateY * 907));
+    }
+
+    @Override
     public String toString() {
         return "[" + coordinateX + "," + coordinateY + "]";
     }
