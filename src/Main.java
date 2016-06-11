@@ -14,7 +14,6 @@ public class Main {
         listOfMonominos.add(new Monomino(new Point(0,0),"a",true,false));
         listOfMonominos.add(new Monomino(new Point(1,0),"a",false,false));
         listOfMonominos.add(new Monomino(new Point(0,1),"",false,true));
-     //   listOfMonominos.add(new Monomino(new Point(-10,0),"a",false,false));
 
         polyomino1= new Polyomino(listOfMonominos);
         Set<Monomino> listOfMonominos7 = new HashSet<>();
@@ -28,7 +27,7 @@ public class Main {
 
         Set<Monomino> listOfMonominos2 = new HashSet<>();
         listOfMonominos2.add(new Monomino(new Point(0,0),"a",true,false));
-        listOfMonominos2.add(new Monomino(new Point(1,0),"a",false,false));
+        listOfMonominos2.add(new Monomino(new Point(0,1),"a",false,false));
 //        listOfMonominos2.add(new Monomino(new Point(-1,0),"a",false,false));
        // listOfMonominos2.add(new Monomino(new Point(1,0),"a",false,false));
      //   listOfMonominos2.add(new Monomino(new Point(10,0),"a",false,false));
@@ -45,23 +44,15 @@ public class Main {
 
         Set<Monomino> listOfMonominos4 = new HashSet<>();
         listOfMonominos4.add(new Monomino(new Point(0,0),"a",true,false));
-        listOfMonominos4.add(new Monomino(new Point(0,-1),"a",false,false));
-        listOfMonominos4.add(new Monomino(new Point(0,-2),"a",false,false));
         listOfMonominos4.add(new Monomino(new Point(1,0),"",false,true));
         polyomino4 = new Polyomino(listOfMonominos4);
 
         Set<Monomino> listOfMonominos5 = new HashSet<>();
         listOfMonominos5.add(new Monomino(new Point(0,0),"a",true,false));
-        listOfMonominos5.add(new Monomino(new Point(-2,0),"a",false,false));
-        listOfMonominos5.add(new Monomino(new Point(-3,0),"a",false,false));
-        listOfMonominos5.add(new Monomino(new Point(2,0),"",false,true));
-        listOfMonominos5.add(new Monomino(new Point(3,0),"a",true,false));
-        listOfMonominos5.add(new Monomino(new Point(0,-2),"a",false,false));
-        listOfMonominos5.add(new Monomino(new Point(0,-3),"a",false,false));
-        listOfMonominos5.add(new Monomino(new Point(0,2),"",false,false));
-        listOfMonominos5.add(new Monomino(new Point(0,3),"",false,false));
+        listOfMonominos5.add(new Monomino(new Point(0,1),"",false,true));
+
         polyomino5 = new Polyomino(listOfMonominos5);
-        Set<Monomino> listOfMonominos6 = new HashSet<>();
+
         //listOfMonominos6.add(new Monomino(new Point()));
 
         List<Polyomino> test = new ArrayList<>();
@@ -69,6 +60,9 @@ public class Main {
         test.add(polyomino7);
         test.add(polyomino2);
         test.add(polyomino3);
+//        test.add(polyomino4);
+//        test.add(polyomino5);
+        PolyominoCode.calculateVectors(test);
  //       System.out.println(PolyominoCode.findEastVector(test));
 //        PolyominoCode.checkIfHalfPlaneContainsAllMonominos(new Point(-1,-1),test);
 //        System.out.println(PolyominoCode.calculateAngleBetweenVectors(polyomino1,new Point(-1,0)));
@@ -85,6 +79,14 @@ public class Main {
 
        // test.stream().forEach(e -> System.out.println(e.hashCode()));
        // System.out.println(PolyominoCode.concatenatePolyominos(polyomino1,polyomino2));
+
         System.out.println(PolyominoCode.checkIfSetIsCode(test));
+
+
+
+
+
+
+
     }
 }

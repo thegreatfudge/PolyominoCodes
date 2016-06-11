@@ -51,11 +51,9 @@ public class PolyominoCode {
 
         tmp.addAll(firstCopy.getMonominos());
 
-//        tmp.stream().forEach(System.out::println);
 
         Polyomino result = new Polyomino(tmp);
 
- //       System.out.println(result.getBeginningOfPolyomino() + " " + result.getEndOfPolyomino());
         return result;
     }
 
@@ -467,11 +465,11 @@ public class PolyominoCode {
         // pkt 3
         Map<VectorDirection, Point> vectors = calculateVectors(polyominos);
 
-        //przeskalowac
-
+        //skalowanie wektorów
         for (Map.Entry<VectorDirection, Point> e : vectors.entrySet()) {
-        //    System.out.println(e.getKey() + " " + e.getValue());
+            vectors.put(e.getKey(),rescaleVector(e.getValue(), polyominos, e.getKey()));
         }
+
 
         // pkt 4
         Set<Pair> checkedConfigurations = new HashSet<>();
@@ -481,14 +479,13 @@ public class PolyominoCode {
 
         Pair configuration = new Pair();
 
-        // TODO sprawdzic czy wystarcza referencje, czy trzeba kopiowac
+
         for (int i = 0; i < polyominos.size(); i++) {
             for (int j = i + 1; j < polyominos.size(); j++) {
                 configuration = new Pair();
                 if (checkIfLabelEqualInCEMinus(polyominos.get(i), polyominos.get(j), configuration)
                         && checkIfEndsOutsideCWEPlus(polyominos.get(i), polyominos.get(j))
-                        && !reducedConfigurations.contains(configuration))
-                {
+                        && !reducedConfigurations.contains(configuration)){
                     checkedConfigurations.add(new Pair(polyominos.get(i), polyominos.get(j)));
                     reducedConfigurations.add(configuration);
                 }
@@ -497,29 +494,33 @@ public class PolyominoCode {
 
         // pkt 6
 
-        Set<Pair> reducedConfigurationsTMP = new HashSet<>();
         Set<Pair> checkedConfigurationsTMP = new HashSet<>();
+        Set<Pair> reducedConfigurationsTMP = new HashSet<>();
 
         // pkt 7
-
+        int k = 0;
         while (!(reducedConfigurations.size() == reducedConfigurationsTMP.size()
-                && reducedConfigurations.containsAll(reducedConfigurationsTMP)))
-        {
+                && reducedConfigurations.containsAll(reducedConfigurationsTMP)) ) { k++;
             // a)
-            checkedConfigurationsTMP = checkedConfigurations;
-            reducedConfigurationsTMP = reducedConfigurations;
+
+            checkedConfigurationsTMP = new HashSet<>(checkedConfigurations);
+            reducedConfigurationsTMP = new HashSet<>(reducedConfigurations);
             checkedConfigurations = new HashSet<>();
 
             // b)
 
+
             Polyomino catenationXZ, catenationYZ;
 
             for (Pair pair : checkedConfigurationsTMP) {
+
+                int j = -1;
                 for (Polyomino polyomino : polyominos) {
 
-                    // I
+                    j = ++j;
                     catenationXZ = concatenatePolyominos(pair.getFirst(), polyomino);
                     catenationYZ = concatenatePolyominos(pair.getSecond(), polyomino);
+
 
                     if (catenationXZ.equals(pair.getSecond()) || catenationYZ.equals(pair.getFirst())) {
                         return false;
@@ -527,23 +528,25 @@ public class PolyominoCode {
                     // II
                     //C copy
                     Point eastVector = vectors.get(VectorDirection.EAST);
-                    double eastLenght = Math.pow(eastVector.getCoordinateY(),2)
-                    + Math.pow(eastVector.getCoordinateX(),2);
+
+                    double eastLenght = Math.pow(eastVector.getCoordinateY(), 2)
+                            + Math.pow(eastVector.getCoordinateX(), 2);
                     Point endXZ = new Point(catenationXZ.getEndOfPolyomino().getCoordinates().getCoordinateX(),
                             catenationXZ.getEndOfPolyomino().getCoordinates().getCoordinateY());
                     Point endY = new Point(pair.getSecond().getEndOfPolyomino().getCoordinates().getCoordinateX(),
                             pair.getSecond().getEndOfPolyomino().getCoordinates().getCoordinateY());
-                    Point endDifference = new Point (endXZ.getCoordinateX() - endY.getCoordinateX(),
+                    Point endDifference = new Point(endXZ.getCoordinateX() - endY.getCoordinateX(),
                             endXZ.getCoordinateY() - endY.getCoordinateY());
-                    double scalar = (eastVector.getCoordinateX() * endDifference.getCoordinateX() ) +
+
+                    double scalar = (eastVector.getCoordinateX() * endDifference.getCoordinateX()) +
                             (eastVector.getCoordinateY() * endDifference.getCoordinateY());
                     configuration = new Pair();
-                    if( checkIfLabelEqualInCEMinus(catenationXZ, pair.getSecond(), configuration)
+                    if (checkIfLabelEqualInCEMinus(catenationXZ, pair.getSecond(), configuration)
                             && checkIfEndsOutsideCWEPlus(catenationXZ, pair.getSecond())
                             && (Math.abs(scalar) <= eastLenght)
-                            && !reducedConfigurations.contains(configuration)){
+                            && !reducedConfigurations.contains(configuration)) {
 
-                        checkedConfigurations.add(new Pair(catenationXZ,pair.getSecond()));
+                        checkedConfigurations.add(new Pair(catenationXZ, pair.getSecond()));
                         reducedConfigurations.add(configuration);
                     }
                     // III
@@ -551,26 +554,23 @@ public class PolyominoCode {
                             catenationYZ.getEndOfPolyomino().getCoordinates().getCoordinateY());
                     Point endX = new Point(pair.getFirst().getEndOfPolyomino().getCoordinates().getCoordinateX(),
                             pair.getFirst().getEndOfPolyomino().getCoordinates().getCoordinateY());
-                    Point endDifference2 = new Point (endX.getCoordinateX() - endYZ.getCoordinateX(),
+                    Point endDifference2 = new Point(endX.getCoordinateX() - endYZ.getCoordinateX(),
                             endX.getCoordinateY() - endYZ.getCoordinateY());
-                    double scalar2 = (eastVector.getCoordinateX() * endDifference2.getCoordinateX() ) +
+                    double scalar2 = (eastVector.getCoordinateX() * endDifference2.getCoordinateX()) +
                             (eastVector.getCoordinateY() * endDifference2.getCoordinateY());
                     configuration = new Pair();
-                    if( checkIfLabelEqualInCEMinus(catenationYZ, pair.getFirst(), configuration)
+                    if (checkIfLabelEqualInCEMinus(catenationYZ, pair.getFirst(), configuration)
                             && checkIfEndsOutsideCWEPlus(catenationYZ, pair.getFirst())
                             && (Math.abs(scalar2) <= eastLenght)
-                            && !reducedConfigurations.contains(configuration)){
+                            && !reducedConfigurations.contains(configuration)) {
 
-                        checkedConfigurations.add(new Pair(catenationYZ,pair.getFirst()));
+                        checkedConfigurations.add(new Pair(catenationYZ, pair.getFirst()));
                         reducedConfigurations.add(configuration);
                     }
                 }
-
-
             }
 
         }
-
         // pkt 8
 
         return true;
