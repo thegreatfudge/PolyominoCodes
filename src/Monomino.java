@@ -16,10 +16,9 @@ public class Monomino {
         return new Monomino(coordinates.copy(), label, isBeginning, isEnd);
     }
 
-    //TODO BOOLEAN SHIT TO HASHCODE FUNCTION
     @Override
     public int hashCode() {
-        return ((((int)coordinates.getCoordinateX() * 11) ^ ((int)coordinates.getCoordinateY() * 7)));
+        return (((coordinates.getCoordinateX() * 11) ^ (coordinates.getCoordinateY() * 7)));
     }
 
     @Override

@@ -31,6 +31,19 @@ public class Point {
         return ((coordinateX * 839) ^ (coordinateY * 907));
     }
 
+    public Point movePointX(int x){
+        return new Point(coordinateX + x, coordinateY);
+    }
+    public Point movePointY(int y){
+        return new Point(coordinateX,coordinateY + y);
+    }
+    public Point movePointX1(int x){
+        return new Point(coordinateX - x, coordinateY);
+    }
+    public Point movePointY1(int y){
+        return new Point(coordinateX,coordinateY - y);
+    }
+
     @Override
     public String toString() {
         return "[" + coordinateX + "," + coordinateY + "]";

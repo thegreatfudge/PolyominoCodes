@@ -89,4 +89,13 @@ public class Polyomino {
                 ", beginningOfPolyomino=" + beginningOfPolyomino +
                 '}';
     }
+
+    public void refreshPolyomino(){
+        for(Monomino monomino : this.monominos){
+            monomino.setCoordinates(new Point(monomino.getCoordinates().getCoordinateX() + beginningOfPolyomino.getCoordinates().getCoordinateX(),
+                    monomino.getCoordinates().getCoordinateY() + beginningOfPolyomino.getCoordinates().getCoordinateY()));
+        }
+        this.getBeginningOfPolyomino().setCoordinates(new Point(0,0));
+
+    }
 }
