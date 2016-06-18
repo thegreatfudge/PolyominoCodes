@@ -79,10 +79,10 @@ public class PolyominoCode {
 
     public static boolean checkIfMonominoIsWithinVector(Monomino monomino, Monomino end, Map<VectorDirection, Point> vectors) {
         Monomino tmp = new Monomino(new Point(0,0), "a", false, false);
-        for(Map.Entry<VectorDirection, Point> mapEntry : vectors.entrySet() ){
+        for (Map.Entry<VectorDirection, Point> mapEntry : vectors.entrySet()) {
             tmp.setCoordinates(new Point(monomino.getCoordinates().getCoordinateX() - end.getCoordinates().getCoordinateX(),
                     monomino.getCoordinates().getCoordinateY() - end.getCoordinates().getCoordinateY()));
-            if(!checkIfPlaneContainsMonomino(mapEntry.getKey(), mapEntry.getValue(), tmp)) {
+            if (!checkIfPlaneContainsMonomino(mapEntry.getKey(), mapEntry.getValue(), tmp)) {
                 return false;
             }
         }
@@ -90,63 +90,16 @@ public class PolyominoCode {
     }
 
     public static boolean checkIfLabelEqualInCEMinus (Polyomino first, Polyomino second, Pair configuration,
-                                                      Map<VectorDirection, Point> vectors){
-        boolean contains = true;
-        Set<Monomino> outcastsFromFirst = new HashSet<>();
-        Set<Monomino> outcastsFromSecond = new HashSet<>();
+                                                      Map<VectorDirection, Point> vectors)
+    {
+        Set<Monomino> outcastsFromFirst;
+        Set<Monomino> outcastsFromSecond;
 
-        Monomino tmp = new Monomino(new Point(0,0), "a", false, false);
-
-        for(Monomino monomino : first.getMonominos()) {
-            for (Map.Entry<VectorDirection, Point> mapEntry : vectors.entrySet()) {
-                if (mapEntry.getKey() != VectorDirection.EAST) {
-                    tmp.setCoordinates(new Point(monomino.getCoordinates().getCoordinateX() - first.getEndOfPolyomino().getCoordinates().getCoordinateX(),
-                            monomino.getCoordinates().getCoordinateY() - first.getEndOfPolyomino().getCoordinates().getCoordinateY()));
-                    if (!checkIfPlaneContainsMonomino(mapEntry.getKey(), mapEntry.getValue(), tmp)) {
-                        contains = false;
-                        break;
-                    }
-                }
-            }
-            if (!contains) {
-                for (Map.Entry<VectorDirection, Point> mapEntry : vectors.entrySet()) {
-                    if (mapEntry.getKey() != VectorDirection.EAST) {
-                        tmp.setCoordinates(new Point(monomino.getCoordinates().getCoordinateX() - second.getEndOfPolyomino().getCoordinates().getCoordinateX(),
-                                monomino.getCoordinates().getCoordinateY() - second.getEndOfPolyomino().getCoordinates().getCoordinateY()));
-                        if (!checkIfPlaneContainsMonomino(mapEntry.getKey(), mapEntry.getValue(), tmp)) {
-                            outcastsFromFirst.add(monomino);
-                        }
-                    }
-                }
-            }
-        }
-        contains = true;
-
-        for(Monomino monomino : second.getMonominos()){
-            for (Map.Entry<VectorDirection, Point> mapEntry : vectors.entrySet()) {
-                if (mapEntry.getKey() != VectorDirection.EAST) {
-                    tmp.setCoordinates(new Point(monomino.getCoordinates().getCoordinateX() - first.getEndOfPolyomino().getCoordinates().getCoordinateX(),
-                            monomino.getCoordinates().getCoordinateY() - first.getEndOfPolyomino().getCoordinates().getCoordinateY()));
-                    if (!checkIfPlaneContainsMonomino(mapEntry.getKey(), mapEntry.getValue(), tmp)) {
-                        contains = false;
-                        break;
-                    }
-                }
-            }
-            if (!contains) {
-                for (Map.Entry<VectorDirection, Point> mapEntry : vectors.entrySet()) {
-                    if (mapEntry.getKey() != VectorDirection.EAST) {
-                        tmp.setCoordinates(new Point(monomino.getCoordinates().getCoordinateX() - second.getEndOfPolyomino().getCoordinates().getCoordinateX(),
-                                monomino.getCoordinates().getCoordinateY() - second.getEndOfPolyomino().getCoordinates().getCoordinateY()));
-                        if (!checkIfPlaneContainsMonomino(mapEntry.getKey(), mapEntry.getValue(), tmp)) {
-                            outcastsFromSecond.add(monomino);
-                        }
-                    }
-                }
-            }
-        }
+        outcastsFromFirst = findMonominosOutsideHalfPlane(first, second, vectors);
+        outcastsFromSecond = findMonominosOutsideHalfPlane(second, first, vectors);
 
         boolean result = true;
+
         if (outcastsFromFirst.size() != outcastsFromSecond.size()) {
             result = false;
         }
@@ -157,7 +110,7 @@ public class PolyominoCode {
                     break;
                 }
                 for(Monomino monomino1 : outcastsFromSecond) {
-                    if(monomino.equals(monomino1) && !monomino.getLabel().equals(monomino1)){
+                    if(monomino.equals(monomino1) && !monomino.getLabel().equals(monomino1.getLabel())){
                         result = false;
                         break;
                     }
@@ -183,6 +136,38 @@ public class PolyominoCode {
         configuration.setSecond(new Polyomino(setForSecond));
 
         return result;
+    }
+
+    private static Set<Monomino> findMonominosOutsideHalfPlane(Polyomino first, Polyomino second, Map<VectorDirection, Point> vectors) {
+        Monomino tmp = new Monomino(new Point(0, 0), "a", false, false);
+        Set<Monomino> outcasts = new HashSet<>();
+        boolean contains = true;
+
+        for(Monomino monomino : first.getMonominos()) {
+            for (Map.Entry<VectorDirection, Point> mapEntry : vectors.entrySet()) {
+                if (mapEntry.getKey() != VectorDirection.EAST) {
+                    tmp.setCoordinates(new Point(monomino.getCoordinates().getCoordinateX() - first.getEndOfPolyomino().getCoordinates().getCoordinateX(),
+                            monomino.getCoordinates().getCoordinateY() - first.getEndOfPolyomino().getCoordinates().getCoordinateY()));
+                    if (!checkIfPlaneContainsMonomino(mapEntry.getKey(), mapEntry.getValue(), tmp)) {
+                        contains = false;
+                        break;
+                    }
+                }
+            }
+            if (!contains) {
+                for (Map.Entry<VectorDirection, Point> mapEntry : vectors.entrySet()) {
+                    if (mapEntry.getKey() != VectorDirection.EAST) {
+                        tmp.setCoordinates(new Point(monomino.getCoordinates().getCoordinateX() - second.getEndOfPolyomino().getCoordinates().getCoordinateX(),
+                                monomino.getCoordinates().getCoordinateY() - second.getEndOfPolyomino().getCoordinates().getCoordinateY()));
+                        if (!checkIfPlaneContainsMonomino(mapEntry.getKey(), mapEntry.getValue(), tmp)) {
+                            outcasts.add(monomino);
+                        }
+                    }
+                }
+            }
+        }
+
+        return outcasts;
     }
 
     public static boolean checkIfHalfPlaneContainsAllMonominos(Point vector, List<Polyomino> polyominos, VectorDirection vd) {
@@ -262,13 +247,10 @@ public class PolyominoCode {
     // TODO nie wyznacza maxX, niech szuka az znajdzie
     public static Point findEastVector(List<Polyomino> polyominos){
 
-        int maxX=0, maxY=0, minY=0;
+        int currentX = 0, maxY=0, minY=0;
 
         for(Polyomino poly : polyominos){
             for(Monomino mono : poly.getMonominos()) {
-
-                if (mono.getCoordinates().getCoordinateX() > maxX)
-                    maxX = mono.getCoordinates().getCoordinateX();
 
                 if (mono.getCoordinates().getCoordinateY() > maxY)
                     maxY = mono.getCoordinates().getCoordinateY();
@@ -278,16 +260,17 @@ public class PolyominoCode {
             }
         }
 
-        maxX *= 2;
-
         Point eastVector = new Point(0, 0);
 
         outer:
-        for(int i = 0; i <= maxX; i++) {
-            for(int j = minY; j <= maxY; j++){
+        while (true) {
 
-                eastVector.setCoordinateX(i);
-                eastVector.setCoordinateY(j);
+            eastVector.setCoordinateX(currentX);
+            currentX++;
+
+            for (int i = minY; i <= maxY; i++) {
+
+                eastVector.setCoordinateY(i);
 
                 for (int k = 0; k < polyominos.size(); k++) {
                     if (((eastVector.getCoordinateX() * polyominos.get(k).getEndOfPolyomino().getCoordinates().getCoordinateX()
@@ -304,10 +287,10 @@ public class PolyominoCode {
         return eastVector;
     }
 
-    public static List<Polyomino> findMinMaxAngleBetweenPolyominos(List<Polyomino> polyominos, Point eastVector){
+    public static Map<VectorDirection, Point> findMinMaxAngleBetweenPolyominos(List<Polyomino> polyominos, Point eastVector){
 
-        Polyomino northVector = null;
-        Polyomino southVector = null;
+        Point northVector = null;
+        Point southVector = null;
 
         Point rotatedEastVector = new Point(eastVector.getCoordinateY(), (-1) * eastVector.getCoordinateX());
         double tmp, minAngle = 360, maxAngle = 0;
@@ -318,19 +301,19 @@ public class PolyominoCode {
 
             if (tmp > maxAngle) {
                 maxAngle = tmp;
-                northVector = poly;
+                northVector = poly.getEndOfPolyomino().getCoordinates().copy();
             }
             if (tmp < minAngle) {
                 minAngle = tmp;
-                southVector = poly;
+                southVector = poly.getEndOfPolyomino().getCoordinates().copy();
             }
         }
 
-        List<Polyomino> northSouth = new LinkedList<>();
-        northSouth.add(northVector);
-        northSouth.add(southVector);
+        Map<VectorDirection, Point> result = new HashMap<>();
+        result.put(VectorDirection.NORTH, northVector);
+        result.put(VectorDirection.SOUTH, southVector);
 
-        return northSouth;
+        return result;
     }
 
     public static Map<VectorDirection, Point> calculateVectors(List<Polyomino> polyominos) {
@@ -340,13 +323,13 @@ public class PolyominoCode {
         Point east = PolyominoCode.findEastVector(polyominos);
         vectors.put(VectorDirection.EAST, east);
 
-        List<Polyomino> tmp = PolyominoCode.findMinMaxAngleBetweenPolyominos(polyominos, east);
+        Map<VectorDirection, Point> tmp = PolyominoCode.findMinMaxAngleBetweenPolyominos(polyominos, east);
 
-        vectors.put(VectorDirection.NORTH, new Point((-1) * tmp.get(0).getEndOfPolyomino().getCoordinates().getCoordinateY(),
-                tmp.get(0).getEndOfPolyomino().getCoordinates().getCoordinateX()));
+        vectors.put(VectorDirection.NORTH, new Point((-1) * tmp.get(VectorDirection.NORTH).getCoordinateY(),
+                tmp.get(VectorDirection.NORTH).getCoordinateX()));
 
-        vectors.put(VectorDirection.SOUTH, new Point(tmp.get(1).getEndOfPolyomino().getCoordinates().getCoordinateY(),
-                (-1) * tmp.get(1).getEndOfPolyomino().getCoordinates().getCoordinateX()));
+        vectors.put(VectorDirection.SOUTH, new Point(tmp.get(VectorDirection.SOUTH).getCoordinateY(),
+                (-1) * tmp.get(VectorDirection.SOUTH).getCoordinateX()));
 
         vectors.put(VectorDirection.WEST, new Point((-1) * east.getCoordinateX(), (-1) * east.getCoordinateY()));
 
@@ -383,8 +366,10 @@ public class PolyominoCode {
     }
 
     public static boolean checkIfTwoPairsEqual(Pair first, Pair second){
-        return ((checkIfPolyominosEqual(first.getFirst(), second.getFirst()) && checkIfPolyominosEqual(first.getSecond(), second.getSecond()))
-         || (checkIfPolyominosEqual(first.getFirst(), second.getSecond()) && checkIfPolyominosEqual(first.getSecond(), second.getFirst())));
+        return ((checkIfPolyominosEqual(first.getFirst(), second.getFirst()) &&
+                 checkIfPolyominosEqual(first.getSecond(), second.getSecond())) ||
+                (checkIfPolyominosEqual(first.getFirst(), second.getSecond()) &&
+                 checkIfPolyominosEqual(first.getSecond(), second.getFirst())));
     }
 
 
@@ -392,7 +377,7 @@ public class PolyominoCode {
         // pkt 3
         Map<VectorDirection, Point> vectors = calculateVectors(polyominos);
 
-        //skalowanie wektorów
+        // skalowanie wektorów
         for (Map.Entry<VectorDirection, Point> e : vectors.entrySet()) {
             vectors.put(e.getKey(),rescaleVector(e.getValue(), polyominos, e.getKey()));
         }
@@ -407,22 +392,13 @@ public class PolyominoCode {
         for (int i = 0; i < polyominos.size(); i++) {
             for (int j = i+1; j < polyominos.size(); j++) {
                 configuration = new Pair();
-                boolean checkIfContains = false;
 
                 if (checkIfLabelEqualInCEMinus(polyominos.get(i), polyominos.get(j), configuration,vectors)
-                        && checkIfEndsOutsideCWEPlus(polyominos.get(i), polyominos.get(j),vectors))
+                        && checkIfEndsOutsideCWEPlus(polyominos.get(i), polyominos.get(j),vectors)
+                        && !checkIfReducedConfigurationsContainPair(reducedConfigurations, configuration))
                 {
-                    for (Pair pair : reducedConfigurations) {
-                        if (checkIfTwoPairsEqual(pair, configuration)) {
-                            checkIfContains = true;
-                            break;
-                        }
-                    }
-                    if(!checkIfContains){
-                        checkedConfigurations.add(new Pair(polyominos.get(i), polyominos.get(j)));
-                        reducedConfigurations.add(configuration);
-
-                    }
+                    checkedConfigurations.add(new Pair(polyominos.get(i), polyominos.get(j)));
+                    reducedConfigurations.add(configuration);
                 }
             }
         }
@@ -453,8 +429,6 @@ public class PolyominoCode {
                     Map<Point, String> map3 = new HashMap<>();
                     Map<Point, String> map4 = new HashMap<>();
 
-
-
                     for(Monomino monomino : catenationXZ.getMonominos()){
                         map1.put(monomino.getCoordinates(), monomino.getLabel());
                     }
@@ -473,14 +447,12 @@ public class PolyominoCode {
 
                     if (map1.equals(map4)) {
                         return false;
-
                     }
                     if(map2.equals(map3)) {
                         return false;
                     }
 
                     // II
-                    //C copy
                     Point eastVector = vectors.get(VectorDirection.EAST);
 
                     double eastLenght = Math.pow(eastVector.getCoordinateY(), 2)
@@ -495,21 +467,14 @@ public class PolyominoCode {
                     double scalar = (eastVector.getCoordinateX() * endDifference.getCoordinateX()) +
                             (eastVector.getCoordinateY() * endDifference.getCoordinateY());
                     configuration = new Pair();
-                    boolean checkIfContains = false;
+
                     if (checkIfLabelEqualInCEMinus(catenationXZ, pair.getSecond(), configuration,vectors)
                             && checkIfEndsOutsideCWEPlus(catenationXZ, pair.getSecond(),vectors)
-                            && (Math.abs(scalar) <= eastLenght)) {
-                        for (Pair pair2 : reducedConfigurations) {
-                            if (checkIfTwoPairsEqual(pair2, configuration)){
-                                checkIfContains = true;
-                                break;
-                            }
-                        }
-
-                        if(!checkIfContains) {
-                            checkedConfigurations.add(new Pair(catenationXZ, pair.getSecond()));
-                            reducedConfigurations.add(configuration);
-                        }
+                            && (Math.abs(scalar) <= eastLenght)
+                            && !checkIfReducedConfigurationsContainPair(reducedConfigurations, configuration))
+                    {
+                        checkedConfigurations.add(new Pair(catenationXZ, pair.getSecond()));
+                        reducedConfigurations.add(configuration);
                     }
                     // III
                     Point endYZ = new Point(catenationYZ.getEndOfPolyomino().getCoordinates().getCoordinateX(),
@@ -521,20 +486,14 @@ public class PolyominoCode {
                     double scalar2 = (eastVector.getCoordinateX() * endDifference2.getCoordinateX()) +
                             (eastVector.getCoordinateY() * endDifference2.getCoordinateY());
                     configuration = new Pair();
-                    checkIfContains = false;
+
                     if (checkIfLabelEqualInCEMinus(catenationYZ, pair.getFirst(), configuration, vectors)
                             && checkIfEndsOutsideCWEPlus(catenationYZ, pair.getFirst(), vectors)
-                            && (Math.abs(scalar2) <= eastLenght)) {
-                        for (Pair pair2 : reducedConfigurations) {
-                            if (checkIfTwoPairsEqual(pair2, configuration)) {
-                                checkIfContains = true;
-                                break;
-                            }
-                        }
-                        if(!checkIfContains) {
-                            checkedConfigurations.add(new Pair(catenationYZ, pair.getFirst()));
-                            reducedConfigurations.add(configuration);
-                        }
+                            && (Math.abs(scalar2) <= eastLenght)
+                            && !checkIfReducedConfigurationsContainPair(reducedConfigurations, configuration))
+                    {
+                        checkedConfigurations.add(new Pair(catenationYZ, pair.getFirst()));
+                        reducedConfigurations.add(configuration);
                     }
                 }
             }
@@ -544,6 +503,17 @@ public class PolyominoCode {
         return true;
     }
 
+    private static boolean checkIfReducedConfigurationsContainPair(Set<Pair> reducedConfigurations, Pair configuration) {
+        boolean result = false;
+        for (Pair pair : reducedConfigurations) {
+            if (checkIfTwoPairsEqual(pair, configuration)) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
     public static Polyomino encodeCode(List<Polyomino> polyominos){
         Polyomino tmp = polyominos.get(0);
         for(int i=1; i < polyominos.size() ; i++)
@@ -551,48 +521,5 @@ public class PolyominoCode {
         return tmp;
     }
 
-    public static List<Polyomino> decodeCode(Polyomino polyomino, List<Polyomino> polyominos){
-        List<Polyomino> decodedPolyominos = new LinkedList<>();
-        int counter1 = 0;
-        for(int i=0; i<5; i++) {
-            for (Polyomino polyomino1 : polyominos) {
-                polyomino.refreshPolyomino();
-                System.out.println(polyomino);
-                if (polyomino.getBeginningOfPolyomino().getLabel() == polyomino.getBeginningOfPolyomino().getLabel()) {
-                    for (Monomino monomino : polyomino1.getMonominos()) {
-                        for (Monomino monomino1 : polyomino.getMonominos()) {
-                            if (monomino.getCoordinates().getCoordinateX() == monomino1.getCoordinates().getCoordinateX()
-                                    && monomino.getCoordinates().getCoordinateY() == monomino1.getCoordinates().getCoordinateY()
-                                    && !monomino.isBeginning()) {
-                                if (!monomino.isEnd()) {
-                                    if (monomino.getLabel().equals(monomino1.getLabel())) {
-                                        counter1++;
-                                    }
-                                } else {
-                                    counter1++;
-                                }
-
-                            }
-                        }
-                    }
-                    if (counter1 == 1) {
-                        decodedPolyominos.add(polyomino1);
-                        String tmp = null;
-                        for(Monomino monomino : polyomino.getMonominos()){
-                            if(monomino.getCoordinates().getCoordinateX() == polyomino1.getEndOfPolyomino().getCoordinates().getCoordinateX()
-                                    && monomino.getCoordinates().getCoordinateY() == polyomino1.getEndOfPolyomino().getCoordinates().getCoordinateY())
-                                tmp = monomino.getLabel();
-                        }
-                        polyomino.setBeginningOfPolyomino(polyomino1.getEndOfPolyomino());
-                        polyomino.getBeginningOfPolyomino().setLabel(tmp);
-
-                    }
-                }
-                counter1 = 0;
-            }
-        }
-        System.out.println(counter1);
-        return decodedPolyominos;
-    }
 }
 
