@@ -157,7 +157,7 @@ public class PolyominoCode {
                     break;
                 }
                 for(Monomino monomino1 : outcastsFromSecond) {
-                    if(monomino.equals(monomino1) && !monomino.getLabel().equals(monomino1)){
+                    if(monomino.equals(monomino1) && !monomino.getLabel().equals(monomino1.getLabel())){
                         result = false;
                         break;
                     }
@@ -389,6 +389,21 @@ public class PolyominoCode {
 
 
     public static boolean checkIfSetIsCode(List<Polyomino> polyominos){
+//        for(int i=0; i<polyominos.size(); i++){
+//            Map<Point, Monomino> tmpPolyomino = new HashMap<>();
+//            for(Monomino monomino : polyominos.get(i).getMonominos()){
+//                tmpPolyomino.put(monomino.getCoordinates().copy(),monomino.copy());
+//            }
+//            for(int j=i+1; j<polyominos.size(); j++){
+//                Map<Point, Monomino> tmpPolyomino2 = new HashMap<>();
+//                for(Monomino monomino : polyominos.get(j).getMonominos()){
+//                    tmpPolyomino2.put(monomino.getCoordinates().copy(),monomino.copy());
+//                }
+//                if(tmpPolyomino.)
+//            }
+//
+//        }
+
         // pkt 3
         Map<VectorDirection, Point> vectors = calculateVectors(polyominos);
 
@@ -541,6 +556,7 @@ public class PolyominoCode {
 
         }
         // pkt 8
+
         return true;
     }
 
@@ -551,48 +567,47 @@ public class PolyominoCode {
         return tmp;
     }
 
-    public static List<Polyomino> decodeCode(Polyomino polyomino, List<Polyomino> polyominos){
-        List<Polyomino> decodedPolyominos = new LinkedList<>();
-        int counter1 = 0;
-        for(int i=0; i<5; i++) {
-            for (Polyomino polyomino1 : polyominos) {
-                polyomino.refreshPolyomino();
-                System.out.println(polyomino);
-                if (polyomino.getBeginningOfPolyomino().getLabel() == polyomino.getBeginningOfPolyomino().getLabel()) {
-                    for (Monomino monomino : polyomino1.getMonominos()) {
-                        for (Monomino monomino1 : polyomino.getMonominos()) {
-                            if (monomino.getCoordinates().getCoordinateX() == monomino1.getCoordinates().getCoordinateX()
-                                    && monomino.getCoordinates().getCoordinateY() == monomino1.getCoordinates().getCoordinateY()
-                                    && !monomino.isBeginning()) {
-                                if (!monomino.isEnd()) {
-                                    if (monomino.getLabel().equals(monomino1.getLabel())) {
-                                        counter1++;
-                                    }
-                                } else {
-                                    counter1++;
-                                }
+    public static boolean decodeCode(Polyomino code, List<Polyomino> polyominos, List<Polyomino> decodedPolyominos, int depth, boolean killYourself){
+        Map<Point, Monomino> tmpCode;
+        boolean fits = false;
+        for(Polyomino polyomino : polyominos){
+            tmpCode = new HashMap<>();
+            fits = false;
+            Polyomino polyomino1 = null;
+            for(Monomino monomino : code.getMonominos()){
+                tmpCode.put(monomino.getCoordinates().copy(), monomino.copy());
+            }
+            for(Monomino monomino : polyomino.getMonominos()){
+                Monomino tmp = tmpCode.get(monomino.getCoordinates());
+                if(tmp!=null && tmp.getLabel().equals(monomino.getLabel())){
+                    tmpCode.remove(monomino.getCoordinates());
+                    fits = true;
+                }
 
-                            }
-                        }
-                    }
-                    if (counter1 == 1) {
-                        decodedPolyominos.add(polyomino1);
-                        String tmp = null;
-                        for(Monomino monomino : polyomino.getMonominos()){
-                            if(monomino.getCoordinates().getCoordinateX() == polyomino1.getEndOfPolyomino().getCoordinates().getCoordinateX()
-                                    && monomino.getCoordinates().getCoordinateY() == polyomino1.getEndOfPolyomino().getCoordinates().getCoordinateY())
-                                tmp = monomino.getLabel();
-                        }
-                        polyomino.setBeginningOfPolyomino(polyomino1.getEndOfPolyomino());
-                        polyomino.getBeginningOfPolyomino().setLabel(tmp);
-
+            }
+            polyomino1 = new Polyomino(new HashSet<>(tmpCode.values()));
+            if(fits){
+                for(Monomino monomino1 : polyomino1.getMonominos()){
+                    monomino1.setCoordinates(new Point(monomino1.getCoordinates().getCoordinateX()-polyomino.getEndOfPolyomino().getCoordinates().getCoordinateX(),
+                            monomino1.getCoordinates().getCoordinateY()-polyomino.getEndOfPolyomino().getCoordinates().getCoordinateY()));
+                }
+                if(polyomino1.getMonominos().size() > 0){
+                    System.out.println("HERE");
+                    if(decodeCode(polyomino1,polyominos,decodedPolyominos,depth,killYourself)) {
+                        System.out.println("adding");
+                        decodedPolyominos.add(0,polyomino);
+                        return true;
                     }
                 }
-                counter1 = 0;
+                else{
+                    System.out.println("added2");
+                    decodedPolyominos.add(0, polyomino);
+                    return true;
+                }
             }
+
         }
-        System.out.println(counter1);
-        return decodedPolyominos;
+        return false;
     }
 }
 
